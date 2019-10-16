@@ -41,12 +41,12 @@ bool n_Pcap_Data::exportToFile() {
             os.write(reinterpret_cast<const char*>(packetHeader.at(i)), sizeof(n_pcap_fpkthdr));
 
             // write packet data
-            os.write(reinterpret_cast<const char*>(packetList.at(i)->getFrameData()), packetHeader.at(i)->orig_len);
+            os.write(reinterpret_cast<const char*>(packetList.at(i)->getFrameData()), signed(packetHeader.at(i)->orig_len));
         }
 
         // close ofstream
         os.close();
-    } catch (std::exception ex) {
+    } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         return false;
     }
