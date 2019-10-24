@@ -45,7 +45,7 @@ namespace MAIN {
 
     void init() {
         // read ports from 'ports.ng'
-        readPortsFromFile();
+        if (readPortsFromFile() == false) exit(-1);
 
         // register signal handler
         signal(SIGINT, handler);
