@@ -11,8 +11,10 @@ public:
     ether_header* getEthernetHeader() const ;
     uint8_t* getEthDst() const ;
     void setEthDst(uint8_t* dst);
+    void setEthDst(const uint8_t* dst);
     uint8_t* getEthSrc() const ;
     void setEthSrc(uint8_t* src);
+    void setEthSrc(const uint8_t* src);
     uint16_t getEthType() const ;
     void setEthType(uint16_t eth_type);
     std::string what() const override { return "Ethernet"; }

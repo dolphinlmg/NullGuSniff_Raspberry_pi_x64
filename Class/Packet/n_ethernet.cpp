@@ -25,6 +25,11 @@ void n_Ethernet::setEthDst(uint8_t* dst){
     memcpy(this->ethernet_header->ether_dhost, dst, 6);
 }
 
+// set mac addr by uint8_t*
+void n_Ethernet::setEthDst(const uint8_t* dst){
+    memcpy(this->ethernet_header->ether_dhost, dst, 6);
+}
+
 // return source mac addr to uint8_t*
 uint8_t* n_Ethernet::getEthSrc() const {
     return this->ethernet_header->ether_shost;
@@ -32,6 +37,11 @@ uint8_t* n_Ethernet::getEthSrc() const {
 
 // set mac addr by uint8_t*
 void n_Ethernet::setEthSrc(uint8_t* src){
+    memcpy(this->ethernet_header->ether_shost, src, 6);
+}
+
+// set mac addr by uint8_t*
+void n_Ethernet::setEthSrc(const uint8_t* src){
     memcpy(this->ethernet_header->ether_shost, src, 6);
 }
 
