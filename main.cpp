@@ -1,8 +1,8 @@
 #include "n_main.h"
 
 int main() {
-    n_Pcap wlan0("wlan0");
-    n_Pcap dummy("dum0");
+    n_Pcap eth1("eth1");
+    n_Pcap eth0("eth0");
 
     file = new n_Pcap_Data("./test.pcap");
 
@@ -10,7 +10,7 @@ int main() {
 
     while (true){
         n_Frame* packet;
-        int res = wlan0 >> packet;
+        int res = eth1 >> packet;
         if (res == 0) continue;
         else if (res == -1 || res == -2) break;
 
@@ -25,7 +25,7 @@ int main() {
         // only not filtered packet
 
         // send to another interface
-        dummy << packet;
+        eth0 << packet;
 
         // push&save packet
         *file << packet;
