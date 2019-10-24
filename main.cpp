@@ -25,9 +25,10 @@ int main() {
                 if (!input_tcp->isFilteredDstPort(ports)) {
                     input_tcp->setIPSrc(parseIP("172.203.0.22"));
                     input_tcp->setProferChecksum();
-                    eth0 << input;
                 }
             }
+            eth0 << input;
+	    cout << input;
             *file << input;
         }
 
@@ -39,10 +40,11 @@ int main() {
                 if (!output_tcp->isFilteredPort(ports)) {
                     output_tcp->setIPDst(parseIP("172.24.1.102"));
                     output_tcp->setProferChecksum();
-                    eth0 << output;
                 }
             }
 
+            eth0 << output;
+	    cout << output;
             *file << output;
         }
     }
