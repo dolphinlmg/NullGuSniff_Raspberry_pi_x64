@@ -19,6 +19,7 @@ int main() {
 
         // if input packet captured
         if (input_res != 0) {
+	    dynamic_cast<n_Ethernet*>(input)->setEthDst(reinterpret_cast<const uint8_t*>("\xff\xff\xff\xff\xff\xff"));
             if (input->what() == "TCP"){
                 n_TCP* input_tcp = dynamic_cast<n_TCP*>(input);
 
@@ -39,6 +40,7 @@ int main() {
 
         // if output packet captured
         if (output_res != 0) {
+	    dynamic_cast<n_Ethernet*>(output)->setEthDst(reinterpret_cast<const uint8_t*>("\xff\xff\xff\xff\xff\xff"));
             if (output->what() == "TCP"){
                 n_TCP* output_tcp = dynamic_cast<n_TCP*>(output);
 
