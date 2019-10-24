@@ -18,7 +18,7 @@ public:
     std::string what() const override { return "Ethernet"; }
 
 private:
-    ether_header* ethernet_data;
+    ether_header* ethernet_header;
 };
 
 #endif // ETHERNET_H

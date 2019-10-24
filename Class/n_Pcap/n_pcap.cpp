@@ -3,8 +3,10 @@
 // constructor that open pcap live and initialize member variables
 n_Pcap::n_Pcap(const char* dev) {
     this->handle = pcap_open_live(dev, BUFSIZ, 1, 1, this->errBuf);
-    if (handle == nullptr)
+    if (handle == nullptr) {
         std::cerr << "Cannot open device: " << dev << std::endl;
+        exit(1);
+    }
     this->header = nullptr;
     this->packet = nullptr;
 }
@@ -15,8 +17,8 @@ n_Pcap::~n_Pcap() {
 }
 
 // send packet with handle
-int n_Pcap::sendPacket(const uint8_t* packet_content, uint32_t len) const {
-    return pcap_sendpacket(this->handle, packet_content, static_cast<int>(len));
+int n_Pcap::sendPacket(n_Frame* packet) const {
+    return pcap_sendpacket(this->handle, packet->getFrameData(), static_cast<int>(packet->getLength()));
 }
 
 // receve packet in header, packet
@@ -53,5 +55,14 @@ n_Frame* n_Pcap::recognizePacket() {
         }
     }
     return ret;
+}
 
+int n_Pcap::operator>>(n_Frame* &packet) {
+    int ret = this->getNextPacket();
+    packet = this->recognizePacket();
+    return ret;
+}
+
+int n_Pcap::operator<<(n_Frame* &packet) {
+    return this->sendPacket(packet);
 }

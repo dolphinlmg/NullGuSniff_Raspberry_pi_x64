@@ -13,6 +13,15 @@ n_Pcap_Data::n_Pcap_Data(const char* fileName) {
     this->fileHeader->sigfigs = 0;
     this->fileHeader->snaplen = 0x40000;
     this->fileHeader->linktype = 1;
+
+    // open file
+    this->os = std::ofstream(this->fileName, std::ios::out | std::ios::binary);
+    try {
+        // write file header
+        this->os.write(reinterpret_cast<const char*>(this->fileHeader), sizeof(pcap_file_header));
+    } catch (std::exception& ex) {
+        std::cerr << ex.what() << std::endl;
+    }
 }
 
 // add packet to vector
@@ -24,31 +33,27 @@ bool n_Pcap_Data::push_packet(n_Frame* packet) {
     tmp_header->incl_len = packet->getFrameHeader()->len;
     tmp_header->orig_len = packet->getFrameHeader()->len;
     this->packetHeader.push_back(tmp_header);
-    return true;
-}
-
-// export to file
-bool n_Pcap_Data::exportToFile() {
     try {
-        std::ofstream os(this->fileName, std::ios::out | std::ios::binary);
-        if (packetList.size() != packetHeader.size()) return false;
-
-        // write file header
-        os.write(reinterpret_cast<const char*>(this->fileHeader), sizeof(pcap_file_header));
-
-        for (size_t i = 0; i < packetList.size(); i++) {
-            // write packet header
-            os.write(reinterpret_cast<const char*>(packetHeader.at(i)), sizeof(n_pcap_fpkthdr));
-
-            // write packet data
-            os.write(reinterpret_cast<const char*>(packetList.at(i)->getFrameData()), signed(packetHeader.at(i)->orig_len));
-        }
-
-        // close ofstream
-        os.close();
+        // write packet header
+        this->os.write(reinterpret_cast<const char*>(tmp_header), sizeof(n_pcap_fpkthdr));
+        // write packet data
+        this->os.write(reinterpret_cast<const char*>(packet->getFrameData()), signed(tmp_header->orig_len));
     } catch (std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         return false;
     }
     return true;
+}
+
+// export to file
+void n_Pcap_Data::exportToFile() {
+    this->os.flush();
+}
+
+n_Pcap_Data::~n_Pcap_Data() {
+    this->os.close();
+}
+
+bool n_Pcap_Data::operator<<(n_Frame* &packet) {
+    return this->push_packet(packet);
 }

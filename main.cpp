@@ -1,31 +1,34 @@
 #include "n_main.h"
 
 int main() {
-    n_Pcap pcap_1("eth0");
-    //n_Pcap dummy("dum0");
+    n_Pcap wlan0("wlan0");
+    n_Pcap dummy("dum0");
+
     file = new n_Pcap_Data("./test.pcap");
 
-    // register signal interrupt handler
-    signal(SIGINT, &handler);
+    init();
 
     while (true){
-        // get next packet from wlp0s20f3
-        int res = pcap_1.getNextPacket();
+        n_Frame* packet;
+        int res = wlan0 >> packet;
         if (res == 0) continue;
-        if (res == -1 || res == -2) break;
+        else if (res == -1 || res == -2) break;
 
-        // get appropriate object
-        n_Frame* packet = pcap_1.recognizePacket();
+        // dump packet data
+        cout << packet;
 
-        cout << packet->what() << endl
-             << n_Packet::dumpPacket(packet->getFrameData(), packet->getLength()) << endl;
-
+        // continue if packet has filtered ports
         if (packet->what() == "TCP") {
-            if (dynamic_cast<n_TCP*>(packet)->isTLS()) {
-                file->push_packet(packet);
-                //dummy.sendPacket(packet->getFrameData(), packet->getLength());
-            }
+            n_TCP* tmp = dynamic_cast<n_TCP*>(packet);
+            if (tmp->isFilteredPort(ports)) continue;
         }
+        // only not filtered packet
+
+        // send to another interface
+        dummy << packet;
+
+        // push&save packet
+        *file << packet;
     }
     return 0;
 }

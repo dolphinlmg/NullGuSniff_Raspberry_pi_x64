@@ -11,12 +11,14 @@ public:
     ~n_Pcap();
     pcap_t* getHandle() const { return this->handle; } // return handle
     char* getErrorBuf() { return this->errBuf; } 		// return errBuf
-    int sendPacket(const uint8_t* packet_content, uint32_t len) const ;
+    int sendPacket(n_Frame* packet) const ;
     int getNextPacket();
     pcap_pkthdr* getPacketHeader();
     const uint8_t* getPacketData();
     uint32_t getPacketLength();
     n_Frame* recognizePacket();
+    int operator>>(n_Frame* &packet);
+    int operator<<(n_Frame* &packet);
 
 private:
     pcap_t* handle;
