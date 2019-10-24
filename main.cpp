@@ -26,7 +26,12 @@ int main() {
                     input_tcp->setIPSrc(parseIP("172.203.0.22"));
                     input_tcp->setProferChecksum();
                 }
-            }
+            } else if (input->what() == "IP") {
+		n_IP* input_ip = dynamic_cast<n_IP*>(input);
+
+		input_ip->setIPSrc(parseIP("172.203.0.22"));
+		input_ip->setProferIPChecksum();
+	    }
             eth0 << input;
 	    cout << input;
             *file << input;
@@ -41,7 +46,12 @@ int main() {
                     output_tcp->setIPDst(parseIP("172.24.1.102"));
                     output_tcp->setProferChecksum();
                 }
-            }
+            } else if (output->what() == "IP") {
+		n_IP* output_ip = dynamic_cast<n_IP*>(output);
+
+		output_ip->setIPSrc(parseIP("172.24.1.102"));
+		output_ip->setProferIPChecksum();
+	    }
 
             eth0 << output;
 	    cout << output;
