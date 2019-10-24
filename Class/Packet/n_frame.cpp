@@ -113,6 +113,7 @@ std::string n_Frame::dumpPacket() {
     return ss.str();
 }
 
+// dump packet with operator<<
 std::ostream& operator<<(std::ostream& os,  n_Frame* &packet) {
     os << packet->what() << ": " << packet->getLength() << std::endl
        << packet->dumpPacket() << std::endl;

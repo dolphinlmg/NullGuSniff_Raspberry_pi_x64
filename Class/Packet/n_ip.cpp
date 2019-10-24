@@ -97,6 +97,7 @@ uint16_t ip_checksum(const void* data, int len) {
     return ip_checksum_finish(temp_sum);
 }
 
+// calculate ip checksum
 uint16_t n_IP::calcIPChecksum() {
     struct iphdr* iph = new iphdr;
     memcpy(iph, this->ip_header, this->getSizeOfIPHeader());
@@ -107,6 +108,12 @@ uint16_t n_IP::calcIPChecksum() {
     return checksum;
 }
 
+// set ip checksum
 void n_IP::setIPChecksum(uint16_t checksum) {
     this->ip_header->check = checksum;
+}
+
+// set profer checksum for ip
+void n_IP::setProferIPChecksum() {
+    this->setIPChecksum(this->calcIPChecksum());
 }

@@ -57,12 +57,14 @@ n_Frame* n_Pcap::recognizePacket() {
     return ret;
 }
 
+// get next packet & recognize packet, returns result of getNextPacket()
 int n_Pcap::operator>>(n_Frame* &packet) {
     int ret = this->getNextPacket();
     packet = this->recognizePacket();
     return ret;
 }
 
+// send packet, returns result of sendPacket()
 int n_Pcap::operator<<(n_Frame* &packet) {
     return this->sendPacket(packet);
 }

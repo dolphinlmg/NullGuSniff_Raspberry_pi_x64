@@ -50,10 +50,12 @@ void n_Pcap_Data::exportToFile() {
     this->os.flush();
 }
 
+// destructor
 n_Pcap_Data::~n_Pcap_Data() {
     this->os.close();
 }
 
+// push & save packet
 bool n_Pcap_Data::operator<<(n_Frame* &packet) {
     return this->push_packet(packet);
 }
